@@ -4,39 +4,77 @@
 from adafruit_macropad import MacroPad
 from adafruit_hid.consumer_control_code import ConsumerControlCode
 from rainbowio import colorwheel
+from Layer import Layer
 import time
 import os
+import math
+
+Layer.disableLayer()
 
 macropad = MacroPad()
-tone = 250
 last_position = 0
-timex = 0
 
-#text_lines = macropad.display_text(title="Binds", title_scale=2)
+one = 0
+two = 0
+operand = ""
+ans = 0
 
-while True:
-    key_event = macropad.keys.events.get()
+x = 0
 
+def calculator(first,op,second): #calculator (first int, operand, second int)
+    if op == "+":
+        ans = first+second
+    elif op == "-":
+        ans = first-second
+    elif op == "*":
+        ans = first*second
+    elif op == "/":
+        ans = first/second
+
+keycodes = [
+        7, #key 1
+        8, #key 2
+        9, #etc...
+        4,
+        5,
+        6,
+        1,
+        2,
+        3,
+        "layer",
+        0,
+        "enter",
+]
+        
+while True: #loops
+    
+    key_event = macropad.keys.events.get() #gets events with each loop
     if key_event:
-        if key_event.pressed:
-            macropad.pixels[key_event.key_number] = colorwheel(200)
-            macropad.start_tone(tone)
-        else: 
-            macropad.pixels.fill((0, 0, 0))
-            macropad.stop_tone()
+            key = keycodes[key_event.key_number] #stores key pressed as value from array
+            if key_event.pressed:
+                if isinstance(key, int): #if key is integer in array
+                    if x==0: #if its the first cycle
+                        one = key #store into one
+                        print(key) #print
+                    elif x==3: #if its 3rd cycle
+                        two = key #store into two
+                        print(key) #print
+                elif isinstance(key, str): #if string in the array
+                    if key == "layer": #if layer key
+                        Layer.activateLayer() #activate layer
+                        Layer.chooseOperand()
+                        operand = Layer.operand
+                    if key == "enter": #if enter
+                        try:
+                            calculator(one, operand, two) #try to calculate
+                            break
+                        except ValueError:
+                            print("invalid operation")
 
-    if key_event:
-        keycode = keycodes[key_event.key_number]
-        if key_event.pressed:
-            if isinstance(keycode, int):
-                macropad.keyboard.press(keycode)
-            else:
-                macropad.keyboard_layout.write(keycode)
-        else:
-            if isinstance(keycode, int):
-                macropad.keyboard.release(keycode)
-    #text_lines.show()
-
+            else: #if no key event then release the last key
+                if isinstance(key, int):
+                    macropad.keyboard.release(key)
+    
     macropad.encoder_switch_debounced.update()
 
     if macropad.encoder_switch_debounced.pressed: #MUTE
