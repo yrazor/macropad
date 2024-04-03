@@ -1,22 +1,23 @@
 from adafruit_macropad import MacroPad
 from adafruit_hid.consumer_control_code import ConsumerControlCode
+from rainbowio import colorwheel
 import time
 import os
 import math
 
-macropad = MacroPad()
+#macropad = MacroPad()
 
 class Layer:
-    layerActive = false
+    layerActive = bool(False)
     operand = ""
 
     def activateLayer():
-        layerActive = true
+        layerActive = bool(True)
     def disableLayer():
-        layerActive = false
+        layerActive = bool(False)
 
     def chooseOperand():
-        while layerActive = true:
+        while layerActive == True:
             key_event = macropad.keys.events.get()
             if key_event:
                 key = key_event.key_number
@@ -29,7 +30,7 @@ class Layer:
                         operand = "-"
                     if key == 12:
                         operand = "+"
-                    layerActive = false
+                    layerActive = bool(False)
                 
             else:
                 macropad.keyboard.release()
