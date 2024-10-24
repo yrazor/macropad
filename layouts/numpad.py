@@ -31,18 +31,18 @@ resume()
 
 
 keycodes = [
-    macropad.Keycode.F13,
-    macropad.Keycode.F14,
-    macropad.Keycode.F15,
-    macropad.Keycode.F16,
-    macropad.Keycode.F17,
-    macropad.Keycode.F18,
-    macropad.Keycode.F19,
-    macropad.Keycode.F20,
-    macropad.Keycode.F21,
-    macropad.Keycode.F22,
-    macropad.Keycode.F23,
-    macropad.Keycode.F24,
+    macropad.Keycode.SEVEN,
+    macropad.Keycode.EIGHT,
+    macropad.Keycode.NINE,
+    macropad.Keycode.FOUR,
+    macropad.Keycode.FIVE,
+    macropad.Keycode.SIX,
+    macropad.Keycode.ONE,
+    macropad.Keycode.TWO,
+    macropad.Keycode.THREE,
+    macropad.Keycode.PERIOD,
+    macropad.Keycode.ZERO,
+    macropad.Keycode.ENTER,
 ]
 
 #text_lines = macropad.display_text(title="Binds", title_scale=2)
@@ -56,16 +56,17 @@ while True:
     if key_event:
         if key_event.pressed:
             resume()
-            macropad.pixels[key_event.key_number] = colorwheel(200)
-            macropad.start_tone(tone)
+            #macropad.pixels[key_event.key_number] = colorwheel(200)
+            #macropad.start_tone(tone)
         else: 
             macropad.pixels.fill((0, 0, 0))
-            macropad.stop_tone()
+            #macropad.stop_tone()
 
     if key_event:
         keycode = keycodes[key_event.key_number]
         if key_event.pressed:
             if isinstance(keycode, int):
+                print(keycode)
                 macropad.keyboard.press(keycode)
             else:
                 macropad.keyboard_layout.write(keycode)
